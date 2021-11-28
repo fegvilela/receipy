@@ -1,15 +1,30 @@
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer, flowables
+from reportlab.platypus import Paragraph, SimpleDocTemplate, Spacer
 
+from config import ISSUER, SESSIONS
+from custom_types import Issuer, Sessions, Session
 from write_number import monetario
 
-from config import ISSUER, SESSION
+
+def generate_for_all_dates(
+    issuer: Issuer = ISSUER, sessions: Sessions = SESSIONS
+) -> dict:
+    all_texts: dict = {}
+
+    for date in sessions["dates"]:
+        session: Session = {}
+        session["name"] = sessions["name"]
+        session["cost"] = sessions["cost"]
+        session["written_cost"] = monetario(session["cost"])
+        session["date"] = date
+
+        all_texts[date] = compose_texts(issuer=issuer, session=session)
+
+    return all_texts
 
 
-def compose_texts(issuer: dict, session: dict) -> dict:
-    written_cost = monetario(session["cost"])
-    session["written_cost"] = written_cost
+def compose_texts(issuer: Issuer, session: Session) -> dict:
 
     texts = {
         "title_text": "<para align=center>RECIBO</para>",
@@ -63,10 +78,15 @@ def build_doc(name: str, flowables: list) -> None:
     doc.build(flowables)
 
 
+def build_all_docs() -> None:
+    all_texts = generate_for_all_dates()
+    for date in all_texts:
+        flowables = format_paragraphs(texts=all_texts[date])
+        build_doc(name=f"recibo-{date.replace('/', '-')}", flowables=flowables)
+
+
 def main() -> None:
-    texts = compose_texts(issuer=ISSUER, session=SESSION)
-    flowables = format_paragraphs(texts=texts)
-    build_doc(name="recibo", flowables=flowables)
+    build_all_docs()
 
 
 if __name__ == "__main__":
