@@ -1,3 +1,5 @@
+## código proveniente de projeto de outro desenvolvedor
+
 DECIMAIS = (
     ("décimo", "décimos"),
     ("centésimo", "centésimos"),
