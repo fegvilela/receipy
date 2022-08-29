@@ -16,6 +16,7 @@ def generate_for_all_dates(
         session: Session = {}
         session["name"] = sessions["name"]
         session["cost"] = sessions["cost"]
+        session["cpf"] = sessions["cpf"]
         session["written_cost"] = monetario(session["cost"])
         session["date"] = date
 
@@ -29,8 +30,8 @@ def compose_texts(issuer: Issuer, session: Session) -> dict:
     texts = {
         "title_text": "<para align=center>RECIBO</para>",
         "summary_text": f"<para align=left>Valor total: R${str(session['cost'])},00 ({session['written_cost']})</para>",
-        "main_text": f"<para align=left>Recebi de {session['name']} a importância de R${str(session['cost'])},00 ({session['written_cost']}) referente a uma sessão de psicoterapia, realizada no dia {session['date']}.</para>",
-        "issuer_text": f"<para align=center> Emitente: {issuer['name']} <br /> CPF: {issuer['cpf']} </para>",
+        "main_text": f"<para align=left>Recebi de {session['name']}, CPF {session['cpf']}, a importância de R${str(session['cost'])},00 ({session['written_cost']}) referente a uma sessão de psicoterapia, realizada no dia {session['date']}, online via videoconferência.</para>",
+        "issuer_text": f"<para align=center> Emitente: {issuer['name']} <br /> CPF: {issuer['cpf']}   Telefone: {issuer['telephone']} <br /> Endereço: {issuer['address']} <br /></para>",
         "psychologist_text": f"<para align=center>{issuer['name']} <br /> Psicóloga <br /> CRP {issuer['crp']}</para>",
     }
 
