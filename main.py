@@ -79,11 +79,18 @@ def build_doc(name: str, flowables: list) -> None:
     doc.build(flowables)
 
 
+def format_doc_name(date: str) -> str:
+    date_parts = date.split("/")
+    doc_name = "recibo-{}-{}-{}".format(date_parts[2], date_parts[1], date_parts[0])
+    return doc_name
+
+
 def build_all_docs() -> None:
     all_texts = generate_for_all_dates()
     for date in all_texts:
         flowables = format_paragraphs(texts=all_texts[date])
-        build_doc(name=f"recibo-{date.replace('/', '-')}", flowables=flowables)
+        doc_name = format_doc_name(date=date)
+        build_doc(name=doc_name, flowables=flowables)
 
 
 def main() -> None:
